@@ -25,7 +25,7 @@ void loop()
       Serial.printf("%3d ",myrfid.serNum[i]);
       }
       Serial.printf("\n");
-      if (myrfid.serNum[0] == 230 && myrfid.serNum[1] == 4 && myrfid.serNum[2] == 160 && myrfid.serNum[3] == 76 )
+      if (myrfid.serNum[0] == 230 && myrfid.serNum[1] == 4 && myrfid.serNum[2] == 160 && myrfid.serNum[3] == 76 )  // here add the serial of the card that you want to give access
       {
         Serial.println(" Access Granted");
       }
