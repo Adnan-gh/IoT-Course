@@ -1,29 +1,21 @@
 #include <ESP8266WiFi.h>
-#include "Adafruit_MQTT.h"  // add adafruit library 
-#include "Adafruit_MQTT_Client.h"  // add mQTT library
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
 #define LEDPIN      15
-
-#define ssid          "adnan"     // change according to your wifi
-#define password      "35521081"    // change according to your wifi
+#define ssid          "adnan"    
+#define password      "35521081"    
 #define NOPUBLISH      // comment this out once publishing at less than 10 second intervals
 
-#define ADASERVER     "io.adafruit.com"      // server webite, don't change
-#define ADAPORT       1883                   // don't change 
-#define ADAUSERNAME   "Adnan2023"               
-#define ADAKEY        "aio_XTPb49huP5qWtUe0bONRf4xvtxCf" 
-
+#define ADASERVER     "io.adafruit.com"     // do not change this
+#define ADAPORT       1883                  // do not change this 
+#define ADAUSERNAME   "Adnan2023"               // ADD YOUR username here between the qoutation marks
+#define ADAKEY        "aio_tFLE71ZWG7fjyCaz7m7oVyzyz1V3" // ADD YOUR Adafruit key here betwwen marks
 void MQTTconnect ( void );
-
 WiFiClient client;    // create a class instance for the MQTT server
-
-
-// create an instance of the Adafruit MQTT class. This requires the client, server, portm username and
-// the Adafruit key
 Adafruit_MQTT_Client MQTT(&client, ADASERVER, ADAPORT, ADAUSERNAME, ADAKEY);
 
-// subscription code 
-Adafruit_MQTT_Subscribe LED = Adafruit_MQTT_Subscribe(&MQTT, ADAUSERNAME "/feeds/LED");
-
+// Setup a feed called LED to subscibe to HIGH/LOW changes
+Adafruit_MQTT_Subscribe LED = Adafruit_MQTT_Subscribe(&MQTT, ADAUSERNAME "/feeds/led");
 void setup() 
 {
   
@@ -63,7 +55,7 @@ void loop()
 {  
   MQTTconnect();
 
-
+  // an example of subscription code
   Adafruit_MQTT_Subscribe *subscription;                    // create a subscriber object instance
   while ( subscription = MQTT.readSubscription(5000) )      // Read a subscription and wait for max of 5 seconds.
   {                                                         // will return 1 on a subscription being read.
@@ -77,7 +69,15 @@ void loop()
          }
          if (strcmp("LOW",(char *)LED.lastread) == 0)
          {
-          digitalWrite(LEDPIN, LOW);   
+          digitalWrite(LEDPIN, LOW);
+         }
+
+      // ADD code here to compare (char *)LED.lastread against "HIGH" or "LOW". Refer to previous labs 
+      // for how to use STRCMP. You should use two ifs rather than an if then else structure.
+      // we could also convert characters received into integer variables via the use of atoi for passing values from the 
+      // the broker to the ESP8266
+      
+     
     }
   }
 
@@ -87,7 +87,6 @@ void loop()
     MQTT.disconnect();
   }
   #endif
-}
 }
 /******************************* MQTT connect *******************************************************
  *  
